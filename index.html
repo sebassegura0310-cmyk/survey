@@ -66,14 +66,24 @@
         box-shadow: 0 0 0 0 rgba(255, 101, 101, 0);
       }
     }
+
+    /* Animaciones para la notificación flotante */
+    .toast-enter {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    .toast-exit {
+      transform: translateY(20px) scale(0.95);
+      opacity: 0;
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between items-center px-4 py-4 md:py-8">
+<body class="min-h-screen flex flex-col justify-between items-center px-4 py-4 md:py-8 relative">
 
   <!-- Encabezado / Logo Estilo SurveyLama -->
   <header class="w-full max-w-md flex justify-between items-center py-2 px-2">
     <div class="flex items-center gap-3">
-      <!-- Icono de Mascota / Llama -->
+      <!-- Icono de Mascota / Caja -->
       <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md overflow-hidden p-1 border-2 border-white">
         <div class="w-full h-full rounded-full bg-red-100 flex items-center justify-center text-brandCoral text-2xl font-bold">
           📦
@@ -101,7 +111,7 @@
         ¡Trabaja desde casa y gana hasta 4,000 MX$ por semana!
       </h1>
       <p class="text-base md:text-lg text-cyan-50 font-medium leading-relaxed">
-        Organiza y empaca productos como cosmeticos, juguetes y accesorios. nosotros te los llevamos y los recogemos cuando estén listos.</strong>.
+        Organiza y empaca productos como cosméticos, juguetes y accesorios. Nosotros te los llevamos y los recogemos cuando estén listos.
       </p>
     </div>
 
@@ -139,7 +149,6 @@
 
       <!-- BOTÓN ÚNICO DE REGISTRO (COLOR CORAL) -->
       <div class="space-y-4">
-        <!-- Reemplaza el atributo href por tu enlace real de la oferta de SurveyLama -->
         <a href="https://o.uvixs.com//tr?offer_id=36&aff_id=14" target="_blank" rel="noopener noreferrer" 
            class="btn-pill pulse-animation w-full block bg-brandCoral hover:bg-brandCoralHover text-white font-extrabold text-lg md:text-xl py-4 px-6 uppercase tracking-wider text-center transition">
           REGÍSTRATE GRATIS
@@ -168,9 +177,77 @@
   </main>
 
   <!-- Pie de página -->
-  <footer class="w-full max-w-md text-center text-xs text-cyan-100/70 py-4">
+  <footer class="w-full max-w-md text-center text-xs text-cyan-100/70 py-4 pb-16 md:pb-4">
     <p>© 2026 Portal de Empleo & Encuestas. Todos los derechos reservados.</p>
   </footer>
 
+  <!-- NOTIFICACIÓN FLOTANTE (PRUEBA SOCIAL) -->
+  <div id="live-notification" 
+       class="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:max-w-sm z-50 bg-white/95 backdrop-blur-md text-slate-800 px-4 py-3 rounded-2xl shadow-2xl border border-cyan-100 flex items-center gap-3.5 transition-all duration-500 ease-out toast-exit pointer-events-none">
+    
+    <!-- Punto Verde Parpadeante Estilo Radar -->
+    <div class="relative flex h-3.5 w-3.5 shrink-0">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+    </div>
+
+    <!-- Texto Dinámico -->
+    <div class="text-left leading-tight">
+      <p id="notif-text" class="text-xs md:text-sm font-semibold text-slate-800">
+        Diana fue seleccionada
+      </p>
+      <p id="notif-time" class="text-[11px] font-medium text-emerald-600 mt-0.5">
+        Hace 2 minutos • Cupo verificado
+      </p>
+    </div>
+  </div>
+
+  <!-- Script de rotación de notificaciones -->
+  <script>
+    const notificaciones = [
+      { nombre: "Diana", tiempo: "Hace 2 minutos" },
+      { nombre: "Carlos M.", tiempo: "Hace 4 minutos" },
+      { nombre: "Valeria G.", tiempo: "Hace 1 minuto" },
+      { nombre: "Sofía R.", tiempo: "Hace 6 minutos" },
+      { nombre: "Alejandro T.", tiempo: "Hace 3 minutos" },
+      { nombre: "Fernanda L.", tiempo: "Hace 8 minutos" },
+      { nombre: "Luis H.", tiempo: "Hace 5 minutos" },
+      { nombre: "Mariana P.", tiempo: "Hace 2 minutos" }
+    ];
+
+    let indiceActual = 0;
+    const toast = document.getElementById('live-notification');
+    const notifText = document.getElementById('notif-text');
+    const notifTime = document.getElementById('notif-time');
+
+    function mostrarNotificacion() {
+      const persona = notificaciones[indiceActual];
+      
+      // Actualizar textos
+      notifText.innerHTML = `<span class="font-bold text-slate-900">${persona.nombre}</span> fue seleccionada`;
+      notifTime.textContent = `${persona.tiempo} • Cupo verificado`;
+
+      // Animación de entrada
+      toast.classList.remove('toast-exit');
+      toast.classList.add('toast-enter');
+
+      // Ocultar después de 4.5 segundos
+      setTimeout(() => {
+        toast.classList.remove('toast-enter');
+        toast.classList.add('toast-exit');
+      }, 4500);
+
+      // Avanzar al siguiente nombre
+      indiceActual = (indiceActual + 1) % notificaciones.length;
+    }
+
+    // Mostrar la primera notificación 1.5 segundos después de abrir la página
+    setTimeout(() => {
+      mostrarNotificacion();
+      // Repetir cada 7 segundos
+      setInterval(mostrarNotificacion, 7000);
+    }, 1500);
+  </script>
+
 </body>
-  </html>
+</html>
